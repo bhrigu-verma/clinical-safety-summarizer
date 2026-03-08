@@ -1,0 +1,70 @@
+version: "3.9"
+
+services:
+  # ── ML Backend (Port 8000) ────────────────────────────────────────────────
+  ml-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.ml
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── DL Backend (Port 8001) ────────────────────────────────────────────────
+  dl-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dl
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - PYTHONPATH=/app
+      - TRANSFORMERS_CACHE=/app/.cache/hf
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+---
+# Dockerfile.ml
+# ─────────────────────────────────────────────────────────────────────────────
+# FROM python:3.11-slim
+# WORKDIR /app
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir fastapi uvicorn pdfplumber python-docx \
+#     scikit-learn xgboost lightgbm catboost numpy pandas scipy \
+#     easyocr img2table opencv-python-headless Pillow PyMuPDF
+# COPY src/ ./src/
+# COPY data/ ./data/
+# CMD ["uvicorn", "src.api.main_ml:app", "--host", "0.0.0.0", "--port", "8000"]
+
+---
+# Dockerfile.dl
+# ─────────────────────────────────────────────────────────────────────────────
+# FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
+# WORKDIR /app
+# RUN apt-get update && apt-get install -y python3.11 python3-pip
+# COPY requirements.txt .
+# RUN pip install torch transformers peft bitsandbytes accelerate \
+#     fastapi uvicorn pdfplumber python-docx easyocr img2table \
+#     opencv-python-headless Pillow PyMuPDF evaluate rouge-score
+# COPY src/ ./src/
+# COPY models/ ./models/
+# CMD ["uvicorn", "src.api.main_dl:app", "--host", "0.0.0.0", "--port", "8001"]
