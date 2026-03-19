@@ -1,354 +1,482 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import {
-  Terminal,
-  Zap,
-  BrainCircuit,
-  FileText,
-  ChevronRight,
-  CheckCircle2,
-  Activity,
   ArrowRight,
   ShieldCheck,
-  Search,
-  Sparkles,
-  XCircle,
-  Clock,
-  AlertTriangle,
-  Layers
+  BrainCircuit,
+  Gauge,
+  BarChart3,
+  FlaskConical,
+  ShieldAlert,
+  Database,
+  FileText,
 } from "lucide-react";
+import { SectionHeader, StatBlock, ClinicalCard, Badge } from "@/components/shared/section-header";
+import { EcgDivider } from "@/components/shared/ecg-line";
 
-type ApproachType = "ml" | "base_dl" | "finetuned" | "compare";
+const fade = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0 },
+};
 
-interface ResultData {
-  summary: string;
-  model_used: string;
-  verified: boolean;
-  numeric_accuracy: number;
-  inference_time_ms: number;
-  warnings: string[];
-  tokens_generated?: number;
-}
+const capabilities = [
+  {
+    icon: Gauge,
+    title: "Fast ML Pipeline",
+    description: "Feature-based retrieval and templated narrative generation for rapid turnaround.",
+    accent: "text-serum",
+  },
+  {
+    icon: BrainCircuit,
+    title: "DL Generation",
+    description: "Transformer-based rewriting and fine-tuned inference for higher narrative quality.",
+    accent: "text-saline",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Verification Layer",
+    description: "Numeric checks and warning flags to reduce hallucination risk before review.",
+    accent: "text-verified",
+  },
+];
 
-export default function Home() {
-  const [tableText, setTableText] = useState("");
-  const [approach, setApproach] = useState<ApproachType>("finetuned");
-  const [isSummarizing, setIsSummarizing] = useState(false);
-  const [results, setResults] = useState<Record<string, ResultData> | null>(null);
+const outcomes = [
+  "Reduce manual table-to-text authoring time",
+  "Generate consistent clinical narrative style",
+  "Expose confidence and warning metadata",
+  "Compare model paths for review decisions",
+];
 
-  const handleSummarize = async () => {
-    if (!tableText.trim()) return;
+const limitations = [
+  {
+    title: "Unbounded Output Space",
+    detail:
+      "Classical ML models predict labels or numbers. A regulatory summary is variable-length text with syntax, discourse structure, and domain-specific phrasing, so the target is not a fixed label space.",
+  },
+  {
+    title: "Structured Plus Semantic Input",
+    detail:
+      "The table mixes numeric relationships, clinical row semantics, and variable schemas across studies. Fixed-size feature vectors struggle to preserve both arithmetic structure and language meaning at once.",
+  },
+  {
+    title: "Schema Variability",
+    detail:
+      "Different studies expose different arm counts, row layouts, and header conventions. A pure classical pipeline assumes a stable feature contract, but these tables do not stay stable enough for direct end-to-end generation.",
+  },
+  {
+    title: "Generation Requires Planning",
+    detail:
+      "The system must decide what to mention, in what order, and how to express comparisons in ICH E3 style. That is closer to constrained language generation than standard classification or regression.",
+  },
+];
 
-    setIsSummarizing(true);
-    setResults(null);
+const contributions = [
+  {
+    title: "Deterministic Template Generation",
+    detail:
+      "A rule-based linearisation and template system converts structured adverse event tables into guaranteed-correct regulatory scaffolds before any neural rewriting occurs.",
+    accent: "text-serum",
+  },
+  {
+    title: "Fine-Tuned Seq2Seq Rewriting",
+    detail:
+      "A QLoRA-adapted Flan-T5-XXL model is trained for the narrower rewrite task: transforming rigid source-grounded templates into fluent ICH E3 prose rather than solving end-to-end table-to-text generation.",
+    accent: "text-saline",
+  },
+  {
+    title: "Hallucination-Safe Fallback",
+    detail:
+      "Unsafe rewrites are rejected by the guard layer. When source grounding is insufficient, the system returns the deterministic template instead of emitting a fluent but unreliable summary.",
+    accent: "text-verified",
+  },
+];
 
-    try {
-      if (approach === "compare") {
-        // Use the compare endpoint on port 8001
-        const response = await fetch("http://localhost:8001/summarize-compare", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ table_text: tableText }),
-        });
-        const data = await response.json();
-        setTimeout(() => {
-          setResults({
-            ml: data.ml,
-            base_dl: data.base_dl,
-            finetuned: data.finetuned_dl,
-          });
-          setIsSummarizing(false);
-        }, 400);
-      } else {
-        // Single mode
-        const port = approach === "ml" ? 8000 : 8001;
-        const url = `http://localhost:${port}/summarize`;
-        const body: any = { table_text: tableText };
-        if (port === 8001) {
-          body.mode = approach;
-        }
+const blueprint = [
+  {
+    icon: Database,
+    title: "Stage 1 · Deterministic Template Generation",
+    detail: "Structured adverse event tables are linearized, parsed, and converted into a formulaic regulatory template. Every number is copied from the source table, giving a provably hallucination-free baseline.",
+    accent: "text-serum",
+  },
+  {
+    icon: BrainCircuit,
+    title: "Stage 2 · Fine-Tuned Seq2Seq Rewriting",
+    detail: "A fine-tuned Flan-T5-XXL rewrite model converts the rigid template into fluent ICH E3 prose. Training uses QLoRA with 4-bit NF4 quantization, LoRA r=16, 10K+ combined narrative pairs, and 5x upweighting for 191 gold examples.",
+    accent: "text-saline",
+  },
+  {
+    icon: ShieldAlert,
+    title: "Stage 3 · Hallucination Control",
+    detail: "The system originally used constrained beam search with forced number constraints, but T5-family models produced number-dump artefacts. The production design now accepts model output only when hallucinations are at most 2 and source-number coverage is at least 50%; otherwise the guaranteed-correct template is returned.",
+    accent: "text-verified",
+  },
+  {
+    icon: FileText,
+    title: "Outputs",
+    detail: "Final output is either verified fluent prose or deterministic fallback prose, always paired with traceable metadata for reviewer inspection and model auditing.",
+    accent: "text-plasma",
+  },
+];
 
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        const data = await response.json();
-        setTimeout(() => {
-          setResults({ [approach]: data });
-          setIsSummarizing(false);
-        }, 400);
-      }
-    } catch (error) {
-      console.error("Inference failed:", error);
-      setTimeout(() => {
-        setResults({
-          [approach]: {
-            summary: "Backend connection failed. Ensure servers are running on ports 8000/8001.",
-            model_used: "error",
-            verified: false,
-            numeric_accuracy: 0,
-            inference_time_ms: 0,
-            warnings: ["Connection failed"],
-          },
-        });
-        setIsSummarizing(false);
-      }, 400);
-    }
-  };
+const flowNodes = [
+  { id: "input", label: "Input Tables", x: 120, y: 74, color: "#C9A84C" },
+  { id: "template", label: "Stage 1 Template", x: 330, y: 40, color: "#C9A84C" },
+  { id: "rewrite", label: "Stage 2 Rewrite", x: 330, y: 108, color: "#6BA3BE" },
+  { id: "guard", label: "Stage 3 Guard", x: 520, y: 74, color: "#3B8A5A" },
+  { id: "output", label: "Verified Output", x: 710, y: 74, color: "#D4463B" },
+];
 
-  const clear = () => {
-    setTableText("");
-    setResults(null);
-  };
-
-  const approachConfig = {
-    ml: {
-      label: "ML Ensemble",
-      subtitle: "LightGBM + Jinja2",
-      icon: <Zap className="w-4 h-4" />,
-      color: "blue",
-      activeClass: "bg-blue-600/10 border-blue-500/50 text-blue-400",
-    },
-    base_dl: {
-      label: "DL Base",
-      subtitle: "Flan-T5 (Unfinetuned)",
-      icon: <BrainCircuit className="w-4 h-4" />,
-      color: "purple",
-      activeClass: "bg-purple-600/10 border-purple-500/50 text-purple-400",
-    },
-    finetuned: {
-      label: "DL Fine-tuned",
-      subtitle: "LoRA Adapter (830MB)",
-      icon: <Sparkles className="w-4 h-4" />,
-      color: "emerald",
-      activeClass: "bg-emerald-600/10 border-emerald-500/50 text-emerald-400",
-    },
-    compare: {
-      label: "Compare All",
-      subtitle: "Side-by-Side",
-      icon: <Layers className="w-4 h-4" />,
-      color: "amber",
-      activeClass: "bg-amber-600/10 border-amber-500/50 text-amber-400",
-    },
-  };
-
-  const renderResultCard = (key: string, data: ResultData) => {
-    const isVerified = data.verified && data.numeric_accuracy >= 0.95;
-    const colorMap: Record<string, string> = {
-      ml: "blue",
-      base_dl: "purple",
-      finetuned: "emerald",
-    };
-    const color = colorMap[key] || "blue";
-    const labelMap: Record<string, string> = {
-      ml: "ML Ensemble",
-      base_dl: "DL Base (Unfinetuned)",
-      finetuned: "DL Fine-tuned (LoRA)",
-    };
-
-    return (
-      <motion.div
-        key={key}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: key === "ml" ? 0 : key === "base_dl" ? 0.15 : 0.3 }}
-        className="minimal-card relative overflow-hidden group"
-      >
-        <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-500/5 blur-3xl -mr-16 -mt-16 group-hover:bg-${color}-500/10 transition-all`} />
-
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isVerified ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
-              {isVerified ? (
-                <ShieldCheck className="w-5 h-5 text-green-500" />
-              ) : (
-                <AlertTriangle className="w-5 h-5 text-red-400" />
-              )}
-            </div>
-            <div>
-              <h3 className="font-bold text-sm">{labelMap[key] || key}</h3>
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
-                {isVerified ? (
-                  <><CheckCircle2 className="w-3 h-3 text-green-500" /> Hallucination Check Passed</>
-                ) : (
-                  <><XCircle className="w-3 h-3 text-red-400" /> Hallucination Detected</>
-                )}
-              </p>
-            </div>
-          </div>
-          <span className={`text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider bg-${color}-500/10 text-${color}-400 border border-${color}-500/20`}>
-            {data.model_used}
-          </span>
-        </div>
-
-        <div className="mb-4">
-          <p className="text-sm leading-relaxed text-white/85">
-            {data.summary}
-          </p>
-        </div>
-
-        {data.warnings.length > 0 && (
-          <div className="mb-4 p-2 rounded-lg bg-amber-500/5 border border-amber-500/10">
-            {data.warnings.map((w, i) => (
-              <p key={i} className="text-[11px] text-amber-400/80">{w}</p>
-            ))}
-          </div>
-        )}
-
-        <div className="grid grid-cols-3 gap-3 pt-4 border-t border-white/5">
-          <div>
-            <p className="text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">Inference</p>
-            <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3 text-blue-400" />
-              <p className="text-sm font-mono font-bold text-blue-400">{data.inference_time_ms.toFixed(0)}ms</p>
-            </div>
-          </div>
-          <div>
-            <p className="text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">Num. Accuracy</p>
-            <p className={`text-sm font-mono font-bold ${data.numeric_accuracy >= 0.95 ? 'text-green-400' : 'text-red-400'}`}>
-              {(data.numeric_accuracy * 100).toFixed(1)}%
-            </p>
-          </div>
-          <div>
-            <p className="text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">Status</p>
-            <div className="flex items-center gap-1.5">
-              <div className={`w-2 h-2 rounded-full ${isVerified ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-              <span className="text-xs font-semibold">{isVerified ? 'Verified' : 'Failed'}</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    );
-  };
-
+export default function HomePage() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-      {/* Left Column: Input */}
-      <div className="lg:col-span-5 space-y-6">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
-            Generate Summary
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            Input linearized clinical tables for regulatory-grade summarization.
-          </p>
+    <div className="space-y-24 pb-20">
+      <section className="relative overflow-hidden pt-10 md:pt-16">
+        <div className="ambient-layer ambient-layer-a" />
+        <div className="ambient-layer ambient-layer-b" />
+        <div className="ambient-layer ambient-layer-c" />
+        <div className="absolute inset-0 opacity-[0.08]">
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px)",
+              backgroundSize: "44px 44px",
+            }}
+          />
         </div>
 
-        <div className="minimal-card space-y-4">
-          <div className="flex items-center justify-between text-sm">
-            <label className="font-medium flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-blue-400" />
-              Linearized Table Input
-            </label>
-            <button
-              onClick={clear}
-              className="text-xs text-muted-foreground hover:text-white transition-colors"
-            >
-              Clear
-            </button>
-          </div>
+        <motion.div
+          className="relative max-w-4xl"
+          initial="hidden"
+          animate="show"
+          variants={{ show: { transition: { staggerChildren: 0.1 } } }}
+        >
+          <motion.div variants={fade}>
+            <Badge variant="plasma" size="md">Clinical NLP Platform</Badge>
+          </motion.div>
 
-          <textarea
-            value={tableText}
-            onChange={(e) => setTableText(e.target.value)}
-            placeholder="start_table [TABLE_TITLE: Table 1] [HEADERS: | Placebo | Drug] [ROW] TEAE | 10 (5%) | 12 (6%) ... end_table"
-            className="w-full h-48 bg-black/40 border border-white/10 rounded-xl p-4 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all resize-none"
-          />
+          <motion.h1 variants={fade} className="mt-6 font-display text-5xl leading-[1.05] text-parchment md:text-7xl">
+            Clinical Safety Tables
+            <span className="block text-plasma">Converted Into Narrative Evidence</span>
+          </motion.h1>
 
-          <div className="space-y-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-white/40">Select Approach</span>
-            <div className="grid grid-cols-2 gap-2">
-              {(Object.entries(approachConfig) as [ApproachType, any][]).map(([key, cfg]) => (
-                <button
-                  key={key}
-                  onClick={() => setApproach(key)}
-                  className={`flex items-center gap-2 py-2.5 px-3 rounded-xl border transition-all text-left ${approach === key
-                      ? cfg.activeClass
-                      : "bg-white/5 border-white/5 text-white/60 hover:bg-white/10"
-                    }`}
+          <motion.p variants={fade} className="mt-6 max-w-3xl text-lg leading-relaxed text-cortex md:text-2xl">
+            ClinicalSafe transforms adverse event tables into review-ready summaries using hybrid ML and deep learning workflows with explicit verification signals.
+          </motion.p>
+
+          <motion.div variants={fade} className="mt-8 flex flex-wrap gap-3">
+            <div className="chip-float border border-serum/30 bg-serum/10 px-3 py-1.5 text-xs uppercase tracking-wide text-serum">
+              0.0 Hallucination Target
+            </div>
+            <div className="chip-float border border-saline/30 bg-saline/10 px-3 py-1.5 text-xs uppercase tracking-wide text-saline">
+              ML + DL Compare Mode
+            </div>
+            <div className="chip-float border border-verified/30 bg-verified/10 px-3 py-1.5 text-xs uppercase tracking-wide text-verified">
+              Numeric Guardrails
+            </div>
+          </motion.div>
+
+          <motion.div variants={fade} className="mt-10 flex flex-wrap gap-4">
+            <Link href="/summarizer" className="btn-primary">
+              Open Summarizer
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/research" className="btn-secondary">Explore Methodology</Link>
+          </motion.div>
+
+          <motion.div variants={fade} className="mt-14 grid grid-cols-2 gap-5 md:grid-cols-4">
+            <StatBlock value="10K" label="Synthetic Pairs" />
+            <StatBlock value="191" label="Indexed Examples" />
+            <StatBlock value="98%" label="Numeric Checks" />
+            <StatBlock value="<2s" label="DL Runtime" />
+          </motion.div>
+
+          <motion.div
+            variants={fade}
+            className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-wider text-cortex"
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            Scroll to see architecture
+            <span className="h-2 w-2 rounded-full bg-plasma" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      <EcgDivider />
+
+      <section>
+        <SectionHeader
+          label="Capabilities"
+          title="Designed for Clinical Review Workloads"
+          description="Three coordinated layers balance speed, generation quality, and trust for safety reporting workflows."
+        />
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {capabilities.map((item) => (
+            <ClinicalCard key={item.title} className="p-6" hover>
+              <item.icon className={`h-6 w-6 ${item.accent}`} />
+              <h3 className="mt-4 font-heading text-xl text-parchment">{item.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-cortex">{item.description}</p>
+            </ClinicalCard>
+          ))}
+        </div>
+      </section>
+
+      <EcgDivider />
+
+      <section>
+        <SectionHeader
+          label="System Blueprint"
+          title="Three-Stage Clinical Generation Architecture"
+          description="The front-end architecture view now reflects the actual research pipeline: deterministic template generation, fine-tuned seq2seq rewriting, and a hard hallucination-control gate before release."
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.55 }}
+          className="mt-10 overflow-hidden rounded-xl border border-white/10 bg-marrow/70 p-4 md:p-6"
+        >
+          <div className="relative">
+            <svg viewBox="0 0 820 160" className="w-full">
+              <defs>
+                <linearGradient id="flowWarm" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#C9A84C" />
+                  <stop offset="100%" stopColor="#D4463B" />
+                </linearGradient>
+                <linearGradient id="flowCool" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#6BA3BE" />
+                  <stop offset="100%" stopColor="#3B8A5A" />
+                </linearGradient>
+              </defs>
+
+              <motion.path
+                d="M165 74 L285 40"
+                stroke="url(#flowWarm)"
+                strokeWidth="2.5"
+                fill="none"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0.4 }}
+                whileInView={{ pathLength: 1, opacity: 0.9 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, ease: "easeOut" }}
+              />
+              <motion.path
+                d="M165 74 L285 108"
+                stroke="url(#flowCool)"
+                strokeWidth="2.5"
+                fill="none"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0.4 }}
+                whileInView={{ pathLength: 1, opacity: 0.9 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.08, ease: "easeOut" }}
+              />
+              <motion.path
+                d="M375 40 L474 74"
+                stroke="url(#flowWarm)"
+                strokeWidth="2.5"
+                fill="none"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0.4 }}
+                whileInView={{ pathLength: 1, opacity: 0.9 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
+              />
+              <motion.path
+                d="M375 108 L474 74"
+                stroke="url(#flowCool)"
+                strokeWidth="2.5"
+                fill="none"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0.4 }}
+                whileInView={{ pathLength: 1, opacity: 0.9 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.28, ease: "easeOut" }}
+              />
+              <motion.path
+                d="M565 74 L664 74"
+                stroke="url(#flowWarm)"
+                strokeWidth="2.5"
+                fill="none"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0.4 }}
+                whileInView={{ pathLength: 1, opacity: 0.9 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.36, ease: "easeOut" }}
+              />
+            </svg>
+
+            <div className="pointer-events-none absolute inset-0 hidden md:block">
+              <div className="flow-pulse flow-pulse-a" />
+              <div className="flow-pulse flow-pulse-b" />
+              <div className="flow-pulse flow-pulse-c" />
+            </div>
+
+            <div className="mt-3 grid grid-cols-1 gap-3 md:absolute md:inset-0 md:mt-0 md:grid-cols-5 md:items-center md:gap-0">
+              {flowNodes.map((node, index) => (
+                <motion.div
+                  key={node.id}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.35 }}
+                  transition={{ delay: 0.1 + index * 0.08, duration: 0.45 }}
+                  className="mx-auto w-full max-w-[170px] rounded-lg border border-white/12 bg-ink/85 p-3 text-center shadow-[0_14px_24px_rgba(0,0,0,0.28)]"
+                  whileHover={{ y: -4, borderColor: "rgba(255,255,255,0.28)" }}
                 >
-                  {cfg.icon}
-                  <div>
-                    <div className="text-xs font-semibold">{cfg.label}</div>
-                    <div className="text-[10px] text-white/30">{cfg.subtitle}</div>
-                  </div>
-                </button>
+                  <div className="text-xs uppercase tracking-wider text-cortex">Stage</div>
+                  <div className="mt-1 font-heading text-sm text-parchment">{node.label}</div>
+                </motion.div>
               ))}
             </div>
           </div>
+        </motion.div>
 
-          <button
-            onClick={handleSummarize}
-            disabled={isSummarizing || !tableText.trim()}
-            className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-semibold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-[1.01] transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 mt-2"
-          >
-            {isSummarizing ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                {approach === "compare" ? "Running All 3 Engines..." : "Synthesizing..."}
-              </>
-            ) : (
-              <>
-                {approach === "compare" ? "Compare All Engines" : "Synthesize Natural Language"}
-                <ChevronRight className="w-5 h-5" />
-              </>
-            )}
-          </button>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {blueprint.map((item, index) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: 0.06 * index, duration: 0.45 }}
+            >
+              <ClinicalCard className="p-5" hover>
+                <item.icon className={`h-5 w-5 ${item.accent}`} />
+                <h3 className="mt-3 font-heading text-lg text-parchment">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-cortex">{item.detail}</p>
+              </ClinicalCard>
+            </motion.div>
+          ))}
         </div>
-      </div>
 
-      {/* Right Column: Results */}
-      <div className="lg:col-span-7 space-y-4">
-        <AnimatePresence mode="wait">
-          {!results && !isSummarizing ? (
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8 rounded-xl border border-white/10 bg-ink/60 p-6"
+        >
+          <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-cortex">
+            <ShieldCheck className="h-4 w-4 text-verified" />
+            Safety Rationale
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-cortex">
+            The key contribution is that the model is not asked to solve the full table-to-narrative problem in one jump. It first receives a guaranteed-correct regulatory template, then performs a narrower rewrite task. If the rewrite does not preserve enough source grounding, the system drops back to the deterministic template instead of emitting an unsafe summary.
+          </p>
+        </motion.div>
+      </section>
+
+      <EcgDivider />
+
+      <section>
+        <SectionHeader
+          label="Motivation"
+          title="Why Classical ML Alone Is Not Enough"
+          description="This problem cannot be solved as a simple classifier or regressor. The input is structured and semantic at the same time, and the output is an unconstrained clinical paragraph rather than a fixed prediction target."
+        />
+
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
+          {limitations.map((item, index) => (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="h-full min-h-[500px] flex flex-col items-center justify-center minimal-card border-dashed"
+              key={item.title}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: 0.06 * index, duration: 0.45 }}
             >
-              <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
-                <Activity className="w-8 h-8 text-white/20" />
-              </div>
-              <h3 className="text-muted-foreground font-medium">Results will appear here</h3>
-              <p className="text-white/20 text-xs mt-2">Enter table data and select an approach to begin</p>
+              <ClinicalCard className="p-5" hover>
+                <h3 className="font-heading text-lg text-parchment">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-cortex">{item.detail}</p>
+              </ClinicalCard>
             </motion.div>
-          ) : isSummarizing ? (
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8 rounded-xl border border-white/10 bg-marrow/60 p-6"
+        >
+          <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-cortex">
+            <BrainCircuit className="h-4 w-4 text-saline" />
+            Design Consequence
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-cortex">
+            That is why ClinicalSafe splits the task. The deterministic stage solves factual extraction and ordering, while the fine-tuned seq2seq model handles the narrower rewrite problem of turning a rigid but correct template into fluent regulatory prose.
+          </p>
+        </motion.div>
+      </section>
+
+      <EcgDivider />
+
+      <section>
+        <SectionHeader
+          label="Research Contribution"
+          title="Three Core Technical Contributions"
+          description="The system contribution is not just a model. It is the combination of a guaranteed-correct deterministic stage, a narrower rewrite objective for the seq2seq model, and a production fallback policy that privileges correctness over stylistic fluency."
+        />
+
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {contributions.map((item, index) => (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="min-h-[500px] flex flex-col items-center justify-center minimal-card"
+              key={item.title}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: 0.06 * index, duration: 0.45 }}
             >
-              <div className="w-16 h-16 rounded-3xl bg-blue-500/10 flex items-center justify-center mb-6">
-                <div className="w-8 h-8 border-3 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
-              </div>
-              <h3 className="text-white/80 font-medium mb-1">
-                {approach === "compare" ? "Running ML → DL Base → DL Fine-tuned..." : "Processing..."}
-              </h3>
-              <p className="text-white/30 text-xs">Generating clinical narrative with hallucination verification</p>
+              <ClinicalCard className="h-full p-6" hover>
+                <div className={`text-xs uppercase tracking-wider ${item.accent}`}>Contribution {index + 1}</div>
+                <h3 className="mt-3 font-heading text-xl text-parchment">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-cortex">{item.detail}</p>
+              </ClinicalCard>
             </motion.div>
-          ) : results ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-4"
-            >
-              {approach === "compare" && (
-                <div className="text-center mb-2">
-                  <span className="text-xs font-bold uppercase tracking-widest text-amber-400/60 bg-amber-500/5 px-4 py-1.5 rounded-full border border-amber-500/10">
-                    3-Way Comparison
-                  </span>
-                </div>
-              )}
-              {Object.entries(results).map(([key, data]) => renderResultCard(key, data))}
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </div>
+          ))}
+        </div>
+      </section>
+
+      <EcgDivider />
+
+      <section className="grid gap-8 lg:grid-cols-2">
+        <div>
+          <SectionHeader
+            label="Value"
+            title="What Teams Get"
+            description="ClinicalSafe is structured to support both exploratory prototyping and high-accountability medical writing workflows."
+          />
+          <ul className="mt-8 space-y-4">
+            {outcomes.map((item) => (
+              <li key={item} className="flex items-start gap-3 text-parchment/85">
+                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-plasma" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <ClinicalCard className="p-7" hover={false}>
+          <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-cortex">
+            <FlaskConical className="h-3.5 w-3.5" />
+            Workflow
+          </div>
+          <h3 className="mt-3 font-heading text-2xl text-parchment">From Raw Table to Decision-Ready Output</h3>
+          <div className="mt-6 space-y-4 text-sm text-cortex">
+            <p>1. Ingest a structured safety table from text, PDF, DOCX, or image extraction.</p>
+            <p>2. Build a deterministic regulatory template using source-grounded values only.</p>
+            <p>3. Rewrite that template with the fine-tuned seq2seq model when fluent generation is requested.</p>
+            <p>4. Accept the rewrite only if hallucinations are at most 2 and coverage stays at or above 50%; otherwise return the deterministic template.</p>
+          </div>
+          <Link href="/summarizer" className="btn-primary mt-7 inline-flex">
+            Start a Run
+            <BarChart3 className="h-4 w-4" />
+          </Link>
+        </ClinicalCard>
+      </section>
     </div>
   );
 }

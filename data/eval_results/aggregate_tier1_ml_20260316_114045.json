@@ -1,0 +1,109 @@
+{
+  "rouge_1": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "rouge_2": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "rouge_l": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "bertscore_f1": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "meteor": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "flesch_kincaid_grade": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "numeric_accuracy_rate": {
+    "mean": 1.0,
+    "std": 0.0,
+    "p10": 1.0,
+    "p50": 1.0,
+    "p90": 1.0
+  },
+  "hallucination_rate": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "omission_rate": {
+    "mean": 1.0,
+    "std": 0.0,
+    "p10": 1.0,
+    "p50": 1.0,
+    "p90": 1.0
+  },
+  "severity_weighted_omission_score": {
+    "mean": 1.0,
+    "std": 0.0,
+    "p10": 1.0,
+    "p50": 1.0,
+    "p90": 1.0
+  },
+  "numeric_drift_index": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "arm_confusion_rate": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "safety_score": {
+    "mean": 0.8,
+    "std": 0.0,
+    "p10": 0.8,
+    "p50": 0.8,
+    "p90": 0.8
+  },
+  "fluency_score": {
+    "mean": 0.0,
+    "std": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "_meta": {
+    "tier": "tier1",
+    "mode": "ml",
+    "n_examples": 5,
+    "timestamp": "20260316_114045",
+    "bertscore_model": "distilbert-base-uncased",
+    "numeric_tolerance": 0.01,
+    "mean_latency_ms": 0.0
+  }
+}

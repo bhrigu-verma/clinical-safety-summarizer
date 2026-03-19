@@ -1,0 +1,7 @@
+profile_name,metric,direction,value,delta_vs_baseline,pct_delta_vs_baseline
+full_system,safety_score_mean,higher_better,0.8952,0.0,0.0
+full_system,fluency_score_mean,higher_better,0.3699,0.0,0.0
+full_system,nar_mean,higher_better,1.0,0.0,0.0
+full_system,hr_mean,lower_better,0.0,0.0,0.0
+full_system,acr_mean,lower_better,0.5238,0.0,0.0
+full_system,latency_ms_mean,lower_better,0.0,0.0,0.0

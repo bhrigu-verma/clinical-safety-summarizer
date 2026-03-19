@@ -1,0 +1,25 @@
+# Clinical Safety Summarization — Evaluation Suite Dependencies
+# Install with: pip install -r requirements_eval.txt
+
+# ── Core NLP evaluation ────────────────────────────────────────────────────
+rouge-score>=0.1.2          # ROUGE-1, ROUGE-2, ROUGE-L
+bert-score>=0.3.13          # BERTScore F1 (requires torch)
+nltk>=3.8                   # METEOR score + sentence tokenization
+textstat>=0.7.3             # Flesch-Kincaid readability
+
+# ── PyTorch (required by bert-score) ──────────────────────────────────────
+# Install CPU version if no GPU: pip install torch --index-url https://download.pytorch.org/whl/cpu
+torch>=2.0                  # BERTScore dependency
+
+# ── Data and figures ──────────────────────────────────────────────────────
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+seaborn>=0.12               # Heatmap in figure 8 (optional but recommended)
+scipy>=1.10                 # Statistics utilities
+
+# ── API calls ─────────────────────────────────────────────────────────────
+requests>=2.28
+
+# ── Progress and utilities ─────────────────────────────────────────────────
+tqdm>=4.65                  # Progress bars in evaluate_batch()

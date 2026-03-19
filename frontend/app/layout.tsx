@@ -1,12 +1,37 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import Link from "next/link";
+import { DM_Sans, Space_Grotesk, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({ subsets: ["latin"] });
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-display",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "ClinicalSafe | 2026 AI Table Summarization",
-  description: "State-of-the-art clinical trial safety table summarization using ML & DL approaches.",
+  title: "ClinicalSafe | Clinical Trial Table Summarization",
+  description:
+    "Transforming pharmaceutical safety tables into precise, compliant clinical narratives using ML and DL approaches.",
 };
 
 export default function RootLayout({
@@ -15,29 +40,102 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={outfit.className}>
-        <main className="min-h-screen relative overflow-hidden">
-          {/* Subtle background glow */}
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+    <html
+      lang="en"
+      className={`dark ${instrumentSerif.variable} ${spaceGrotesk.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="min-h-screen bg-ink text-parchment antialiased font-body">
+        <div className="relative">
+          <header className="sticky top-0 z-50 border-b border-white/8 bg-ink/90 backdrop-blur-sm">
+            <div className="section-container">
+              <nav className="flex h-16 items-center justify-between">
+                <Link href="/" className="flex items-center gap-3 group">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <svg
+                      viewBox="0 0 32 32"
+                      className="w-full h-full text-plasma"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M2 16 h6 l2 -8 l4 16 l4 -16 l2 8 h10" />
+                    </svg>
+                  </div>
+                  <span className="font-heading font-semibold text-lg text-parchment">ClinicalSafe</span>
+                </Link>
 
-          <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 md:py-16">
-            <header className="mb-12 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-purple-600 flex items-center justify-center font-bold text-white">C</div>
-                <h1 className="text-xl font-semibold tracking-tight">ClinicalSafe</h1>
-              </div>
-              <nav className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
-                <a href="#" className="hover:text-foreground transition-colors">Documentation</a>
-                <a href="#" className="hover:text-foreground transition-colors">Safety Ethics</a>
-                <div className="h-4 w-px bg-border" />
-                <button className="px-4 py-1.5 rounded-full bg-white text-black hover:bg-white/90 transition-all font-medium">Log out</button>
+                <div className="hidden md:flex items-center gap-8">
+                  <Link href="/summarizer" className="nav-link">
+                    Summarizer
+                  </Link>
+                  <Link href="/research" className="nav-link">
+                    Research
+                  </Link>
+                  <Link href="/about" className="nav-link">
+                    About
+                  </Link>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <a
+                    href="https://github.com/bhrigu-verma/clinical-safety-summarizer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ghost"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                    <span className="hidden sm:inline">GitHub</span>
+                  </a>
+                  <Link href="/summarizer" className="btn-primary">
+                    Try Now
+                  </Link>
+                </div>
               </nav>
-            </header>
-            {children}
-          </div>
-        </main>
+            </div>
+          </header>
+
+          <main className="section-container">{children}</main>
+
+          <footer className="border-t border-white/8 mt-24">
+            <div className="section-container py-12">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-3">
+                  <svg
+                    viewBox="0 0 32 32"
+                    className="w-6 h-6 text-plasma"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M2 16 h6 l2 -8 l4 16 l4 -16 l2 8 h10" />
+                  </svg>
+                  <span className="font-heading text-sm text-cortex">ClinicalSafe Research</span>
+                </div>
+                <p className="text-xs text-cortex">Precision summarization for pharmaceutical safety data.</p>
+                <div className="flex items-center gap-6 text-xs text-cortex">
+                  <Link href="/about" className="hover:text-parchment transition-colors">
+                    About
+                  </Link>
+                  <Link href="/research" className="hover:text-parchment transition-colors">
+                    Methodology
+                  </Link>
+                  <a
+                    href="https://github.com/bhrigu-verma/clinical-safety-summarizer"
+                    className="hover:text-parchment transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source
+                  </a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
       </body>
     </html>
   );

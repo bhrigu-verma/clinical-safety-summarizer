@@ -1,0 +1,42 @@
+table_id,summary_t5xxl,latency_ms
+trial_0000,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,9321.36
+trial_0001,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7098.39
+trial_0002,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7560.38
+trial_0003,"In the safety population (N=186 for Chemotherapy; N=199 for Pembrolizumab), 32.7% and 61.8% of subjects experienced a TEAE. The incidence of Grade 3 or higher events was 0.0% (Chemotherapy) and 7.5% (Pembrolizumab). SAEs occurred in 0.5% of patients treated with Chemotherapy.",6952.8
+trial_0004,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7024.66
+trial_0005,"In the safety population (N=96 for Chemotherapy; N=185 for Pembrolizumab), 58.9% and 81.2% of subjects experienced a TEAE. The incidence of Grade 3 or higher events was 16.2% (Chemotherapy) and 22.9% (Pembrolizumab). SAEs occurred in 3.2% of patients treated with Chemotherapy.",7054.96
+trial_0006,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,6806.41
+trial_0007,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,6969.37
+trial_0008,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,3242.95
+trial_0009,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,3272.96
+trial_0010,"In the safety population (N=93 for Chemotherapy; N=260 for Pembrolizumab), 51.2% and 78.5% of subjects experienced a TEAE. The incidence of Grade 3 or higher events was 5.8% (Chemotherapy) and 4.3% (Pembrolizumab). SAEs occurred in 4.4% of patients treated with Chemotherapy.",6866.42
+trial_0011,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7657.41
+trial_0012,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,3260.44
+trial_0013,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7032.77
+trial_0014,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,6892.97
+trial_0015,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7134.56
+trial_0016,"Treatment-emergent adverse events (TEAEs) were reported for 105 (59.8%) subjects in the Placebo arm and 76 (80.8%) subjects in the Dupilumab arm. Grade 3–4 TEAEs occurred in 13.4% of Placebo subjects compared with 4.6% in the Dupilumab group. Serious adverse events were reported in 2.4% and 22.3% of subjects, respectively.",7715.86
+trial_0017,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7632.07
+trial_0018,"Treatment-emergent adverse events (TEAEs) were reported for 77 (42.8%) subjects in the Chemotherapy arm and 50.7% in the Pembrolizumab arm. Grade 3–4 TEAEs occurred in 2.3% of Chemotherapy subjects compared with 11.2% in the Pembrolizumab group. Serious adverse events were reported in 16.2% and 10.5% of subjects, respectively.",7402.29
+trial_0019,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7575.0
+trial_0020,"Treatment-emergent adverse events (TEAEs) were reported for 70 (59.3%) subjects in the Placebo arm and 54 (56.5%) subjects in the Dupilumab arm. Grade 3–4 TEAEs occurred in 1.1% of Placebo subjects compared with 12.1% in the Dupilumab group. Serious adverse events were reported in 20.9% and 27.4% of subjects, respectively.",7633.09
+trial_0021,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7465.87
+trial_0022,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7782.44
+trial_0023,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7662.37
+trial_0024,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,6110.81
+trial_0025,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,6781.75
+trial_0026,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7587.13
+trial_0027,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7347.81
+trial_0028,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,6848.62
+trial_0029,"Treatment-emergent adverse events (TEAEs) were reported for 95 (42.1%) subjects in the Chemotherapy arm and 98 (45.2%) subjects in the Pembrolizumab arm. Grade 3–4 TEAEs occurred in 1.7% of Chemotherapy subjects compared with 15.7% in the Pembrolizumab group. Serious adverse events were reported in 2.6% and 9.5% of subjects, respectively.",7689.62
+trial_0030,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,6145.22
+trial_0031,"In the safety population (N=111 for Chemotherapy; N=203 for Pembrolizumab), 63.1% and 71.2% of subjects experienced a TEAE. The incidence of Grade 3 or higher events was 1.5% (Chemotherapy) and 19.7% (Pembrolizumab). SAEs occurred in 1.0% of patients treated with Chemotherapy.",6915.0
+trial_0032,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7543.88
+trial_0033,"Treatment-emergent adverse events (TEAEs) were reported for 161 ( 30.6%) subjects in the Placebo arm and 29 ( 12.7%) subjects in the Semagglutinib arm. Grade 3–4 TEAEs occurred in 2.7% of Placebo subjects compared with 21.4% in the Semagglutinib group. Serious adverse events were reported in 17.2% and 23.6% of subjects, respectively.",7792.42
+trial_0034,"In the safety population (N=198 for Chemotherapy; N=174 for Pembrolizumab), 49.4% and 57.6% of subjects experienced a TEAE. The incidence of Grade 3 or higher events was 1.1% (Chemotherapy) and 2.0% (Pembrolizumab). SAEs occurred in 0.0% of patients treated with Chemotherapy.",6941.75
+trial_0035,"In the safety population (N=163 for Chemotherapy; N=125 for Pembrolizumab), 37.6% and 54.0% of subjects experienced a TEAE. The incidence of Grade 3 or higher events was 3.2% (Chemotherapy) and 4.9% (Pembrolizumab). SAEs occurred in 0.8% of patients treated with Chemotherapy.",7710.6
+trial_0036,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,7483.22
+trial_0037,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,3233.26
+trial_0038,"Treatment-emergent adverse events (TEAEs) were reported for 134 | 49.8% and 74.4% of subjects in the Chemotherapy arm and 16 | 8.9% in the Pembrolizumab arm. Grade 3–4 TEAEs occurred in 2.3% of Chemotherapy subjects compared with 20.6% in the Pembrolizumab group. Serious adverse events were reported in 20.7% and 11.1% of subjects, respectively.",8058.61
+trial_0039,"Treatment-emergent adverse events (TEAEs) were reported for 159 (58.4%) subjects in the Placebo arm and 94 (81.1%) subjects in the Dupilumab arm. Grade 3–4 TEAEs occurred in 1.9% of Placebo subjects compared with 24.0% in the Dupilumab group. Serious adverse events were reported in 14.9% and 29.6% of subjects, respectively.",7795.41
+trial_0040,Key: TEAE=treatment-emergent adverse event; SAE=serious adverse event. a Adverse events reported as related. b Excludes Grade 5.,3250.23

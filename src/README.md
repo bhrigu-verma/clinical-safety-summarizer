@@ -2,6 +2,11 @@
 Complete backend for clinical safety table summarization.  
 Supports **PDF / DOCX / JPEG / PNG** input → structured table + clinical narrative output.
 
+## Evaluation Docs
+
+- Full evaluation and metrics briefing: [RESEARCH_EVALUATION_CODEBASE_AGENT_BRIEFING.md](../RESEARCH_EVALUATION_CODEBASE_AGENT_BRIEFING.md)
+- One-page execution runbook: [EVALUATION_QUICKSTART.md](../EVALUATION_QUICKSTART.md)
+
 ---
 
 ## Files Changed vs Original src_2.zip

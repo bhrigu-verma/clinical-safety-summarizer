@@ -1,0 +1,93 @@
+{
+  "run_id": "eval_tier1_20260318_232936",
+  "started_at": "2026-03-18T23:29:36.602637",
+  "tier": "tier1",
+  "profile_name": "no_gate",
+  "modes": [
+    "ml",
+    "dl_base",
+    "finetuned"
+  ],
+  "input": {
+    "benchmark_dir": "/Users/bhriguverma/medicalproject/data/benchmark",
+    "n_examples_loaded": 41,
+    "n_max": null
+  },
+  "config": {
+    "bertscore_model": "distilbert-base-uncased",
+    "bertscore_device": "cpu",
+    "numeric_tolerance": 0.01,
+    "ml_url": "http://localhost:8010",
+    "dl_url": "http://localhost:8011"
+  },
+  "backend_health": {
+    "ml_available": true,
+    "dl_available": true
+  },
+  "outputs": {
+    "results_csv": {
+      "ml": "/Users/bhriguverma/medicalproject/data/eval_results/results_tier1_ml_20260318_232936.csv",
+      "dl_base": "/Users/bhriguverma/medicalproject/data/eval_results/results_tier1_dl_base_20260318_232936.csv",
+      "finetuned": "/Users/bhriguverma/medicalproject/data/eval_results/results_tier1_finetuned_20260318_232936.csv"
+    },
+    "aggregate_json": {
+      "ml": "/Users/bhriguverma/medicalproject/data/eval_results/aggregate_tier1_ml_20260318_232936.json",
+      "dl_base": "/Users/bhriguverma/medicalproject/data/eval_results/aggregate_tier1_dl_base_20260318_232936.json",
+      "finetuned": "/Users/bhriguverma/medicalproject/data/eval_results/aggregate_tier1_finetuned_20260318_232936.json"
+    },
+    "summary_csv": "/Users/bhriguverma/medicalproject/data/eval_results/summary_tier1_20260318_232936.csv"
+  },
+  "mode_summaries": {
+    "ml": {
+      "n_examples": 41,
+      "mean_latency_ms": 0.0,
+      "p95_latency_ms": 0.0,
+      "nar_mean": 1.0,
+      "hr_mean": 0.0,
+      "acr_mean": 0.1022,
+      "rdi_mean": 0.0,
+      "rii_mean": 0.0,
+      "dpe_mean": 0.0,
+      "cor_mean": 0.0488,
+      "safety_mean": 0.9796,
+      "fluency_mean": 0.3503
+    },
+    "dl_base": {
+      "n_examples": 41,
+      "mean_latency_ms": 0.0,
+      "p95_latency_ms": 0.0,
+      "nar_mean": 0.7249,
+      "hr_mean": 0.4146,
+      "acr_mean": 0.2363,
+      "rdi_mean": 0.0138,
+      "rii_mean": 0.0201,
+      "dpe_mean": 0.0,
+      "cor_mean": 0.5,
+      "safety_mean": 0.7528,
+      "fluency_mean": 0.1735
+    },
+    "finetuned": {
+      "n_examples": 41,
+      "mean_latency_ms": 0.0,
+      "p95_latency_ms": 0.0,
+      "nar_mean": 0.9506,
+      "hr_mean": 0.1638,
+      "acr_mean": 0.5068,
+      "rdi_mean": 0.0,
+      "rii_mean": 0.0172,
+      "dpe_mean": 0.0,
+      "cor_mean": 0.0488,
+      "safety_mean": 0.8404,
+      "fluency_mean": 0.3646
+    }
+  },
+  "finished_at": "2026-03-18T23:29:42.770012",
+  "duration_seconds": 6.17,
+  "overall": {
+    "n_modes": 3,
+    "best_safety_mode": "ml",
+    "best_fluency_mode": "finetuned",
+    "mean_nar_across_modes": 0.8918,
+    "mean_hr_across_modes": 0.1928
+  }
+}

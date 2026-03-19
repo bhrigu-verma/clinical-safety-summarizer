@@ -1,0 +1,2 @@
+table_id,mode,tier,latency_ms,rouge_1,rouge_2,rouge_l,bertscore_f1,meteor,fk_grade,nar,hr,or_score,swos,ndi,acr,safety_score,fluency_score,n_source_nums,n_output_nums,n_halluc_sents,n_total_sents,errors
+trial_0000,ml,tier1,0.0,0.7684,0.5714,0.678,0.0,0.5731,4.32,1.0,0.0,0.0,0.0,0.0,0.0,1.0,0.3467,32,22,0,7,

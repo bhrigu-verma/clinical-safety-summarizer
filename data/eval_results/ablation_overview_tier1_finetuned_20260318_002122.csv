@@ -1,0 +1,2 @@
+profile_name,mode,tier,n_examples,latency_ms_mean,nar_mean,hr_mean,acr_mean,safety_score_mean,fluency_score_mean,delta_safety,delta_fluency,delta_nar,delta_hr,delta_acr,delta_latency_ms,baseline_profile
+full_system,finetuned,tier1,1,0.0,1.0,0.0,0.5238,0.8952,0.3699,0.0,0.0,0.0,0.0,0.0,0.0,full_system

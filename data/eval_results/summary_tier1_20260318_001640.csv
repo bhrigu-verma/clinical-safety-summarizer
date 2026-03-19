@@ -1,0 +1,4 @@
+run_id,tier,mode,n_examples,latency_ms_mean,latency_ms_p95,rouge_l_mean,bertscore_f1_mean,meteor_mean,fk_grade_mean,nar_mean,hr_mean,or_mean,swos_mean,ndi_mean,acr_mean,safety_score_mean,fluency_score_mean
+eval_tier1_20260318_001640,tier1,ml,1,0.0,0.0,0.678,0.0,0.5731,4.3193,1.0,0.0,0.0,0.0,0.0,0.0,1.0,0.3467
+eval_tier1_20260318_001640,tier1,dl_base,1,0.0,0.0,0.4472,0.0,0.1921,6.8734,0.9167,0.1429,0.0,0.0,0.0014,0.2174,0.8916,0.1822
+eval_tier1_20260318_001640,tier1,finetuned,1,0.0,0.0,0.7425,0.0,0.5887,4.1314,1.0,0.0,0.0,0.0,0.0,0.5238,0.8952,0.3699

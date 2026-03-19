@@ -1,0 +1,2 @@
+run_id,tier,profile_name,mode,n_examples,latency_ms_mean,latency_ms_p95,rouge_l_mean,bertscore_f1_mean,meteor_mean,fk_grade_mean,nar_mean,hr_mean,or_mean,swos_mean,ndi_mean,acr_mean,safety_score_mean,fluency_score_mean
+eval_tier1_20260318_111340,tier1,no_arm_parser,finetuned,3,0.0,0.0,0.7197,0.0,0.5826,3.4169,0.9881,0.0417,0.0,0.0,1190476.1905,0.4921,0.887,0.3616

@@ -1,0 +1,4 @@
+profile_name,mode,tier,n_examples,latency_ms_mean,nar_mean,hr_mean,acr_mean,safety_score_mean,fluency_score_mean,delta_safety,delta_fluency,delta_nar,delta_hr,delta_acr,delta_latency_ms,baseline_profile
+no_arm_parser,finetuned,tier1,3,0.0,0.9881,0.0417,0.4921,0.887,0.3616,0.0031999999999999806,-0.003500000000000003,0.0,0.0,-0.015800000000000036,0.0,full_system
+full_system,finetuned,tier1,3,0.0,0.9881,0.0417,0.5079,0.8838,0.3651,0.0,0.0,0.0,0.0,0.0,0.0,full_system
+no_gate,finetuned,tier1,3,0.0,0.9523,0.1667,0.5088,0.8399,0.3622,-0.04390000000000005,-0.002899999999999958,-0.03579999999999994,0.12499999999999999,0.0009000000000000119,0.0,full_system

@@ -1,0 +1,2 @@
+run_id,tier,profile_name,mode,n_examples,latency_ms_mean,latency_ms_p95,rouge_l_mean,bertscore_f1_mean,meteor_mean,fk_grade_mean,nar_mean,hr_mean,or_mean,swos_mean,ndi_mean,acr_mean,rdi_mean,rii_mean,dpe_mean,cor_mean,safety_score_mean,fluency_score_mean
+eval_tier1_t5xxl_20260319_114452,tier1,full_system,t5xxl,41,6835.442439024389,7795.41,0.0,0.0,0.055516609638950234,0.0,0.7286585365853658,0.2764227642276422,0.2682926829268293,0.2682926829268293,0.02519390011549134,0.09866962305986696,0.0026132404181184654,0.012005840679249364,0.0,1.0,0.7625323355506282,0.013879152409737559

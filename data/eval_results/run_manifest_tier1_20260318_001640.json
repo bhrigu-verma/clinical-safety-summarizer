@@ -1,0 +1,80 @@
+{
+  "run_id": "eval_tier1_20260318_001640",
+  "started_at": "2026-03-18T00:16:40.370092",
+  "tier": "tier1",
+  "modes": [
+    "ml",
+    "dl_base",
+    "finetuned"
+  ],
+  "input": {
+    "benchmark_dir": "data/benchmark",
+    "n_examples_loaded": 1,
+    "n_max": 1
+  },
+  "config": {
+    "bertscore_model": "distilbert-base-uncased",
+    "bertscore_device": "cpu",
+    "numeric_tolerance": 0.01,
+    "ml_url": "http://localhost:8000",
+    "dl_url": "http://localhost:8001"
+  },
+  "backend_health": {
+    "ml_available": false,
+    "dl_available": false
+  },
+  "outputs": {
+    "results_csv": {
+      "ml": "data/eval_results/results_tier1_ml_20260318_001640.csv",
+      "dl_base": "data/eval_results/results_tier1_dl_base_20260318_001640.csv",
+      "finetuned": "data/eval_results/results_tier1_finetuned_20260318_001640.csv"
+    },
+    "aggregate_json": {
+      "ml": "data/eval_results/aggregate_tier1_ml_20260318_001640.json",
+      "dl_base": "data/eval_results/aggregate_tier1_dl_base_20260318_001640.json",
+      "finetuned": "data/eval_results/aggregate_tier1_finetuned_20260318_001640.json"
+    },
+    "summary_csv": "data/eval_results/summary_tier1_20260318_001640.csv"
+  },
+  "mode_summaries": {
+    "ml": {
+      "n_examples": 1,
+      "mean_latency_ms": 0.0,
+      "p95_latency_ms": 0.0,
+      "nar_mean": 1.0,
+      "hr_mean": 0.0,
+      "acr_mean": 0.0,
+      "safety_mean": 1.0,
+      "fluency_mean": 0.3467
+    },
+    "dl_base": {
+      "n_examples": 1,
+      "mean_latency_ms": 0.0,
+      "p95_latency_ms": 0.0,
+      "nar_mean": 0.9167,
+      "hr_mean": 0.1429,
+      "acr_mean": 0.2174,
+      "safety_mean": 0.8916,
+      "fluency_mean": 0.1822
+    },
+    "finetuned": {
+      "n_examples": 1,
+      "mean_latency_ms": 0.0,
+      "p95_latency_ms": 0.0,
+      "nar_mean": 1.0,
+      "hr_mean": 0.0,
+      "acr_mean": 0.5238,
+      "safety_mean": 0.8952,
+      "fluency_mean": 0.3699
+    }
+  },
+  "finished_at": "2026-03-18T00:17:01.200889",
+  "duration_seconds": 20.83,
+  "overall": {
+    "n_modes": 3,
+    "best_safety_mode": "ml",
+    "best_fluency_mode": "finetuned",
+    "mean_nar_across_modes": 0.9722,
+    "mean_hr_across_modes": 0.0476
+  }
+}

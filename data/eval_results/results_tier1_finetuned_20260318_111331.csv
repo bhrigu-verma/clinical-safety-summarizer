@@ -1,0 +1,4 @@
+table_id,mode,tier,profile_name,latency_ms,rouge_1,rouge_2,rouge_l,bertscore_f1,meteor,fk_grade,nar,hr,or_score,swos,ndi,acr,safety_score,fluency_score,n_source_nums,n_output_nums,n_halluc_sents,n_total_sents,errors
+trial_0000,finetuned,tier1,no_gate,0.0,0.8024,0.5939,0.7425,0.0,0.5767,4.13,0.9615,0.125,0.0,0.0,0.0008,0.5263,0.85,0.3669,32,26,1,8,
+trial_0001,finetuned,tier1,no_gate,0.0,0.7811,0.5868,0.7219,0.0,0.5682,2.6,0.9667,0.125,0.0,0.0,0.0007,0.5,0.8571,0.3586,37,30,1,8,
+trial_0002,finetuned,tier1,no_gate,0.0,0.7904,0.5818,0.7305,0.0,0.5676,3.76,0.9286,0.25,0.0,0.0,3571428.5723,0.5,0.8125,0.3611,33,28,2,8,
