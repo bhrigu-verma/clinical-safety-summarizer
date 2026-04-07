@@ -58,6 +58,7 @@ from typing import Dict, List, Optional, Any
 
 import requests
 import numpy as np
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Add project root to path so imports work regardless of working directory.
 # Supports both layouts:
@@ -391,6 +392,7 @@ def run_evaluation(
     numeric_tolerance: float,
     profile_name: str,
     n_max: Optional[int] = None,
+    max_workers: int = 4,
 ) -> None:
     """
     Full evaluation pipeline: load data → call backends → compute metrics → save.
@@ -405,7 +407,9 @@ def run_evaluation(
         bertscore_model:   HuggingFace model for BERTScore
         bertscore_device:  'cpu', 'cuda', 'mps'
         numeric_tolerance: Tolerance for numeric matching
+        profile_name:      Ablation profile name
         n_max:             Max examples to evaluate (None = all)
+        max_workers:       Max parallel API workers.
     """
 
     run_started_at = datetime.datetime.now()
@@ -478,7 +482,7 @@ def run_evaluation(
         eval_inputs: List[Dict[str, Any]] = []
         api_latencies: List[float] = []
 
-        for i, ex in enumerate(examples):
+        def process_example(i, ex):
             table_text   = ex.get("table_text", ex.get("table", ""))
             reference    = ex.get("reference", ex.get("summary", ""))
             arm_names    = ex.get("arm_names", [])
@@ -486,13 +490,12 @@ def run_evaluation(
 
             if not table_text:
                 logger.warning("Example %d (id=%s) has no table_text. Skipping.", i, table_id)
-                continue
+                return None
 
             # ── Get generated summary for this mode ───────────────────────────
             t0 = time.time()
 
             # Check for pre-computed summaries in the benchmark file itself
-            # (useful for offline testing or GPU-only inference pre-run on server)
             precomputed_key = f"summary_{mode}"
             if precomputed_key in ex:
                 generated = ex[precomputed_key]
@@ -508,7 +511,7 @@ def run_evaluation(
                 latency_ms = (time.time() - t0) * 1000
             else:
                 logger.warning("Unknown mode '%s'. Skipping example %d.", mode, i)
-                continue
+                return None
 
             if generated is None:
                 logger.warning(
@@ -518,7 +521,7 @@ def run_evaluation(
                 )
                 generated = ""
 
-            # Apply deterministic profile ablation (works for precomputed or live outputs).
+            # Apply deterministic profile ablation
             generated = apply_profile_ablation(
                 generated,
                 table_text,
@@ -527,9 +530,7 @@ def run_evaluation(
                 profile_name,
             )
 
-            api_latencies.append(latency_ms)
-
-            eval_inputs.append({
+            return {
                 "generated":    generated,
                 "reference":    reference,
                 "source_table": table_text,
@@ -538,10 +539,15 @@ def run_evaluation(
                 "_mode":        mode,
                 "_tier":        tier,
                 "_latency_ms":  latency_ms,
-            })
+            }
 
-            if (i + 1) % 10 == 0:
-                logger.info("  Processed %d/%d examples...", i + 1, len(examples))
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [executor.submit(process_example, i, ex) for i, ex in enumerate(examples)]
+            for future in tqdm(as_completed(futures), total=len(examples), desc=f"Calling {mode} API"):
+                res = future.result()
+                if res:
+                    eval_inputs.append(res)
+                    api_latencies.append(res["_latency_ms"])
 
         # ── Run metric evaluation on all examples for this mode ───────────────
         logger.info("Running metric suite on %d examples for mode=%s...",
@@ -783,6 +789,12 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Maximum number of examples to evaluate. None=all."
     )
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=4,
+        help="Maximum number of parallel API workers per mode."
+    )
     return parser.parse_args()
 
 
@@ -800,4 +812,5 @@ if __name__ == "__main__":
         numeric_tolerance=args.numeric_tolerance,
         profile_name=args.profile_name,
         n_max=args.n_max,
+        max_workers=args.max_workers,
     )

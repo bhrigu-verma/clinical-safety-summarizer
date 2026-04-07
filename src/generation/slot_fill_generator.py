@@ -491,6 +491,14 @@ class SlotFillGenerator:
             ae_text = self.ae_renderer.render(selected, arm_ctx)
             if ae_text:
                 narrative = self._merge(narrative, ae_text, slots)
+
+        # [F5] Generate individual AE listing sentences for tables that have
+        # individual AE rows (MedDRA PT names like Nausea, Headache, etc.)
+        # These appear in the reference but the overview realizer doesn't produce them.
+        ae_listing = self._generate_ae_listing(selected, arm_ctx, linearized_text)
+        if ae_listing and cluster_id != "C14_individual_ae_listing":
+            narrative = f"{narrative} {ae_listing}".strip()
+
         narrative = self._polish(narrative)
 
         # [C5] Verify

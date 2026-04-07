@@ -9,9 +9,11 @@ import re
 import json
 import time
 import requests
+import argparse
 from pathlib import Path
 from tqdm import tqdm
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 OUTPUT_DIR = Path("./pfizer_csrs")
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -224,6 +226,11 @@ def download_pdf(session: requests.Session, url: str, dest: Path) -> bool:
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Pfizer CSR Downloader")
+    parser.add_argument("--max-workers", type=int, default=5, help="Maximum number of parallel download workers")
+    parser.add_argument("--phases", nargs="+", default=PHASES, help="Phases to scrape")
+    args = parser.parse_args()
+
     print("Pfizer CSR Downloader — Phase III/IV (2015–2026)")
     print("Using endpoint: /views/ajax (Drupal)")
     print("=" * 52)
@@ -231,7 +238,7 @@ def main():
     all_trials = []
 
     # ── Collect all trial metadata ────────────────────────
-    for phase in PHASES:
+    for phase in args.phases:
         print(f"\nPhase: {phase}")
         total_pages = get_total_pages(phase)
         print(f"  Estimated pages: {total_pages}")
@@ -260,17 +267,22 @@ def main():
 
     print(f"\n{len(all_pdfs)} PDFs to download...")
 
-    session = requests.Session()
     downloaded = 0
-
-    for url, title, nct_id in tqdm(all_pdfs, desc="Downloading PDFs"):
+    
+    def download_wrapper(pdf_info):
+        url, title, nct_id = pdf_info
         safe_name = re.sub(r"[^\w\-]", "_", f"{nct_id}__{title}")[:100]
         fname     = f"{safe_name}.pdf" if not safe_name.endswith(".pdf") else safe_name
         dest      = OUTPUT_DIR / fname
+        
+        session = requests.Session() # Session per worker or shared? requests.Session is not thread-safe for some operations but usually okay for simple GETs. Better to use one per thread or a shared one with care.
+        return download_pdf(session, url, dest)
 
-        if download_pdf(session, url, dest):
-            downloaded += 1
-        time.sleep(0.3)
+    with ThreadPoolExecutor(max_workers=args.max_workers) as executor:
+        futures = {executor.submit(download_wrapper, pdf): pdf for pdf in all_pdfs}
+        for future in tqdm(as_completed(futures), total=len(all_pdfs), desc="Downloading PDFs"):
+            if future.result():
+                downloaded += 1
 
     print(f"\n✓ Done. {downloaded}/{len(all_pdfs)} PDFs saved to {OUTPUT_DIR}/")
 

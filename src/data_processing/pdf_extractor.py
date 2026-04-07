@@ -101,16 +101,24 @@ class ClinicalPDFExtractor:
 
     def extract_all(self) -> List[ClinicalTablePair]:
         """Route to the correct extractor based on file extension."""
-        suffix = self.source_path.suffix.lower()
+        if not self.source_path.exists():
+            logger.error(f"Source file not found: {self.source_path}")
+            return []
 
-        if suffix == ".pdf":
-            self.pairs = self._extract_pdf()
-        elif suffix in (".docx", ".doc"):
-            self.pairs = self._extract_docx()
-        elif suffix in (".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif"):
-            self.pairs = self._extract_image()
-        else:
-            logger.warning(f"Unsupported file type: {suffix}")
+        try:
+            suffix = self.source_path.suffix.lower()
+
+            if suffix == ".pdf":
+                self.pairs = self._extract_pdf()
+            elif suffix in (".docx", ".doc"):
+                self.pairs = self._extract_docx()
+            elif suffix in (".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif"):
+                self.pairs = self._extract_image()
+            else:
+                logger.warning(f"Unsupported file type: {suffix}")
+                self.pairs = []
+        except Exception as e:
+            logger.error(f"Fatal error during extraction from {self.source_path}: {e}", exc_info=True)
             self.pairs = []
 
         logger.info(f"Extracted {len(self.pairs)} table-writeup pairs from {self.source_path.name}")
@@ -136,15 +144,19 @@ class ClinicalPDFExtractor:
             import pdfplumber
             with pdfplumber.open(str(self.source_path)) as pdf:
                 for page_num, page in enumerate(pdf.pages, 1):
-                    page_pairs = self._process_pdf_page(page, page_num)
-                    pairs.extend(page_pairs)
+                    try:
+                        page_pairs = self._process_pdf_page(page, page_num)
+                        pairs.extend(page_pairs)
+                    except Exception as page_err:
+                        logger.error(f"Error processing PDF page {page_num} of {self.source_path.name}: {page_err}")
+                        continue
 
             if not pairs:
                 logger.info("pdfplumber found no pairs; attempting scanned-PDF fallback")
                 pairs = self._extract_pdf_scanned()
 
         except Exception as e:
-            logger.warning(f"pdfplumber failed ({e}); trying scanned fallback")
+            logger.warning(f"pdfplumber failed to open or process {self.source_path.name} ({e}); trying scanned fallback")
             pairs = self._extract_pdf_scanned()
 
         return pairs
